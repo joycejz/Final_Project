@@ -24,9 +24,6 @@ function MainButton(xPos,yPos,txt) {
   }
   
   this.display=function() {
-    stroke(255);
-    strokeWeight(2);
-    line(75,525,825,525);
     noStroke();
     fill(255);
     ellipse(this.x,this.y,this.w,this.w);

@@ -6,8 +6,14 @@ function Memory(xPos,yPos,s,vel,angle,p) {
   this.v=this.initialV;
   this.a=angle;
   this.img=p;
+  this.on=true;
   this.hover=false;
   this.selected=false;
+  if(this.img.width>this.img.height) {
+    this.exitB=new ExitButton(width/2+350,height/2-250,0);
+  } else {
+    this.exitB=new ExitButton(width/2+130,height/2-250,0);
+  }
   
   this.ifHover=function(x,y) {
     var d=dist(x,y,this.x,this.y)
@@ -25,7 +31,6 @@ function Memory(xPos,yPos,s,vel,angle,p) {
   this.ifSelected=function() {
     if(this.hover && mouseIsPressed) {
       this.selected=true;
-      console.log(this.selected);
     }
   }
   
@@ -45,7 +50,21 @@ function Memory(xPos,yPos,s,vel,angle,p) {
   
   this.display=function() {
     if (this.selected) {
-      image(this.img,width/2,height/2);
+      noStroke();
+      fill(215,210,240);
+      rect(width/2,height/2,width,height);
+      if (this.img.width>this.img.height) {
+        image(this.img,width/2,height/2-30);
+      } else {
+        image(this.img,width/2,height/2-30,this.img.width*0.65,this.img.height*0.65);
+      }
+      this.exitB.ifHover(mouseX,mouseY);
+      this.exitB.ifSelected();
+      if (this.exitB.selected) {
+        this.selected=false;
+      } else {
+        this.exitB.display();
+      }
     } else {
       if (this.hover) {
         noStroke();
