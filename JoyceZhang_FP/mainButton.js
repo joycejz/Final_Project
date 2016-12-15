@@ -7,6 +7,7 @@ function MainButton(xPos,yPos,txt) {
   this.w=20;
   this.w2=35;
   this.hover=false;
+  this.selected=false;
   
   //draws circle around button
   this.mark=function() {
@@ -23,6 +24,10 @@ function MainButton(xPos,yPos,txt) {
     //calculates distance between mouse and button
     if(dist(x,y,this.x,this.y)<=20) {
       this.hover=true;
+      //tests if button is clicked
+      if(mouseIsPressed) {
+        this.selected=true;
+      }
     } else {
       this.hover=false;
     }

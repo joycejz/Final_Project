@@ -1,6 +1,6 @@
 //DRAWING TOOLS
 
-function Tool(xPos,yPos,w,h,col1,col2,col3) {
+function Tool(xPos,yPos,w,h,col1,col2,col3,icon) {
   this.x=xPos;
   this.y=yPos;
   this.w=w;
@@ -8,6 +8,7 @@ function Tool(xPos,yPos,w,h,col1,col2,col3) {
   this.c1=col1;
   this.c2=col2;
   this.c3=col3;
+  this.icon=icon;
   this.hover=false;
   this.selected=false;
   
@@ -38,5 +39,8 @@ function Tool(xPos,yPos,w,h,col1,col2,col3) {
       fill(this.c1);
     }
     rect(this.x,this.y,this.w,this.h);
+    if(icon!=undefined) {
+      image(this.icon,this.x,this.y,this.w,this.h);
+    }
   }
 }

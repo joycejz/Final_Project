@@ -29,13 +29,11 @@ function Environment(xPos,yPos,iWidth,iHeight,col,hCol,imgS,img) {
   }
   
   //lets user control brush size with '[' and ']'
-  this.update=function() {
-    if(keyIsPressed) {
-      if(key==='[') {
-        this.brush-=3;    //smaller
-      } else if(key===']') {
-        this.brush+=3;    //bigger
-      }
+  this.brushSize=function(s) {
+    if(s===0  && this.brush>10) {
+      this.brush-=10;    //smaller
+    } else if(s===1) {
+      this.brush+=10;    //bigger
     }
   }
   
