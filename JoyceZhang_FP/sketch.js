@@ -125,11 +125,11 @@ function setup() {
 	
 	//shelter
 	for (var i=0; i<pics2.length; i++) {
-	  env.push(new Environment(200*(i%4)+150,150*floor((i+4)/4),180,120,255,100,pics3[i],pics2[i]));
+	  env.push(new Environment(width/2,height/2-25,720,480,255,100,pics3[i],pics2[i]));
 	}
 	currEnv=0;
-	left=new Tool(50,height/2-50,30,30,255,200,255);
-	right=new Tool(width-50,height/2-50,30,30,255,200,255);
+	left=new Tool(50,height/2-25,30,30,255,200,255);
+	right=new Tool(width-50,height/2-25,30,30,255,200,255);
 	//draw
 	for(var i=0; i<numTools; i++) {
 	  tools.push(new Tool(70,110+(i*40),25,25,255,color(215,225,230),color(190,200,200)));
@@ -247,35 +247,34 @@ function draw() {
   } else if(currPage==pages[3]) {
     background(160,240,250);    //blue background
     
-    // if (currEnv>0) {
-    //   left.ifHover();
-    //   left.display();
-    // }
-    // if (currEnv<env.length-1) {
-    //   right.ifHover();
-    //   right.display();
-    // }
-    // if(left.hover && mouseIsPressed) {
-    //   if(currEnv>0) {
-    //     currEnv--;
-    //   }
-    // }
-    // if(right.hover && mouseIsPressed){
-    //   if(currEnv)
-    // }
-    // env[currEnv].display();
-    
-    for(var i=0; i<env.length; i++) {
-      env[i].ifHover(mouseX,mouseY);
-      if (env[i].selected) {
-        selEnv=env[i];
-        drawBG();             //set up 'drawing program'
-        currPage=pages[4];    //go to draw page
-        reset('e',i);         //'turns off' other environments
-        break;                //exits for loop
-      } else {
-        env[i].display();
+    if (currEnv>0) {
+      left.ifHover(mouseX,mouseY);
+      left.display();
+      if(left.selected) {
+        currEnv--;
+        console.log(currEnv);
+        wait(1);
+        left.selected=false;
       }
+    }
+    if (currEnv<env.length-1) {
+      right.ifHover(mouseX,mouseY);
+      right.display();
+      if(right.selected){
+        currEnv++;
+        wait(1);
+        right.selected=false;
+      }
+    }
+    env[currEnv].ifHover(mouseX,mouseY);
+    if (env[currEnv].selected) {
+      selEnv=env[currEnv];
+      drawBG();             //set up 'drawing program'
+      currPage=pages[4];    //go to draw page
+      reset('e',currEnv);         //'turns off' other environments
+     // break;                //exits for loop
+    } else {
+      env[currEnv].display();
     }
   //DRAW PAGE
   } else if(currPage==pages[4]) {
@@ -440,5 +439,14 @@ function keyPressed() {
       bgm.play();
     }
     looping=!looping;
+  }
+}
+
+//wait for s seconds
+function wait(s) {
+  var start=second();
+  var end=start;
+  while(end!=((start+s)%59)) {
+    end=second();
   }
 }
