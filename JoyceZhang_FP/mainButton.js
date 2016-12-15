@@ -1,3 +1,5 @@
+//MENU BUTTON (at bottom of screen)
+
 function MainButton(xPos,yPos,txt) {
   this.x=xPos;
   this.y=yPos;
@@ -6,6 +8,7 @@ function MainButton(xPos,yPos,txt) {
   this.w2=35;
   this.hover=false;
   
+  //draws circle around button
   this.mark=function() {
     if (this.hover) {
       stroke(255);
@@ -15,7 +18,9 @@ function MainButton(xPos,yPos,txt) {
     }
   }
   
+  //tests if mouse is hovered over button
   this.ifHover=function(x,y) {
+    //calculates distance between mouse and button
     if(dist(x,y,this.x,this.y)<=20) {
       this.hover=true;
     } else {

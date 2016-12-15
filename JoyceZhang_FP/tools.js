@@ -1,3 +1,5 @@
+//DRAWING TOOLS
+
 function Tool(xPos,yPos,w,h,col1,col2,col3) {
   this.x=xPos;
   this.y=yPos;
@@ -9,9 +11,11 @@ function Tool(xPos,yPos,w,h,col1,col2,col3) {
   this.hover=false;
   this.selected=false;
   
+  //tests if mouse is hovered over button
   this.ifHover=function(x,y) {
-    if((x>this.x-this.w/2 && x<this.x+this.w/2) && (y>this.y-this.h/2 && y<this.y+this.h/2)) {
+    if(abs(x-this.x)<=this.w/2 && abs(y-this.y)<=this.h/2) {
       this.hover=true;
+      //tests if button is clicked
       if(mouseIsPressed) {
         this.selected=true;
       }
@@ -23,10 +27,13 @@ function Tool(xPos,yPos,w,h,col1,col2,col3) {
   this.display=function() {
     stroke(100);
     strokeWeight(0.5);
+    //if button is clicked, color3
     if(this.selected) {
       fill(this.c3);
+    //if button is hovered, color2
     } else if (this.hover) {
       fill(this.c2);
+    //if nothing happens to button, color1
     } else {
       fill(this.c1);
     }
