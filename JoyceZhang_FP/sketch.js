@@ -1,3 +1,13 @@
+//JOYCE ZHANG
+//CREATIVE CODING FALL 2016
+
+//CREDITS:
+//Based off - Shelter by Porter Robinson & Madeon (https://www.youtube.com/watch?v=HQnC1UHBvWA)
+//Video - A-1 Pictures & Crunchyroll (https://www.youtube.com/watch?v=fzQ6gRAEoy0)
+//BGM - Lily Hu
+
+
+
 //MAIN CODE
 
 var font;
@@ -9,7 +19,17 @@ var mainButtons=[];
 
 //background music
 var bgm;
+var bgmCtrls=[];
+var numBgmCtrls=2;
 var playB;
+
+//video clips
+var vids=[];
+numVids=3;
+
+//exit buttons
+var exitB=[];
+numExitB=2;
 
 //present
 var space;
@@ -35,28 +55,24 @@ var picExitB2;
 //shelter
 var pics2=[];
 var env=[];
-var numEnv=8;
-var currEnv;
-var left;
-var right;
+var numEnv=9;
+// var currEnv;
+// var left;
+// var right;
 //drawing program
 var drawing;
 var selEnv;
+var panel;
 var pics3=[];
 var sketch=[];
-var toolPics=[];
-var ctrlPics=[[],[],[]];
-var tools=[];
+var bCtrlPics=[];
 var bCtrls=[];
-var controls=[[],[],[]];
-var numSketch=8;
-var numTools=5;
-var numCtrls=3;
+var numSketch=9;
 var numBCtrls=2;
 var drawExitB;
 var finish;
-var dd1;
-var dd2;
+// var dd1;
+// var dd2;
 //var stylus;
 //var stylusImg;
 
@@ -64,7 +80,26 @@ var dd2;
 var looping;
 
 function preload() {
-  font=loadFont('assets/font.ttf');
+  font=loadFont('data/font.ttf');
+  
+  //bg music
+	bgm=loadSound('data/bgm.mp3');
+	for (var i=0; i<numBgmCtrls; i++) {
+	  bgmCtrls[i]=loadImage('data/music'+i+'.png');
+	}
+  
+  //videos
+  for(var i=0; i<numVids; i++) {
+    vids[i]=createVideo('data/vid'+i+'.mp4');
+    vids[i].size(900,506);
+    vids[i].hide()
+  }
+  
+  //exit button
+  for (var i=0; i<numExitB; i++) {
+    exitB[i]=loadImage('data/x'+i+'.png');
+  }
+  
   //present
 	rin=loadImage('data/rin.png');
 	ship=loadImage('data/ship.png');
@@ -84,25 +119,16 @@ function preload() {
 	  pics3[i]=loadImage('data/sketch'+i+'.jpg');
 	}
 	//draw
-	for (var i=0; i<numTools; i++) {
-	  toolPics[i]=loadImage('data/tool'+i+'.png');
-	}
-	for(var i=0; i<numCtrls; i++) {
-	  for(var j=0; j<numCtrls; j++) {
-	    var n=(i*3)+j;
-	    ctrlPics[i][j]=loadImage('data/ctrl'+n+'.png');
-	  }
-	}
+	panel=loadImage('data/panel.png');
+  for(var i=0; i<numBCtrls; i++) {
+    bCtrlPics[i]=loadImage('data/brush'+i+'.png');
+  }
 	
 	//stylusImg=loadImage('data/pencil.png');
-	
-	//bg music
-	bgm=loadSound('assets/bgm.mp3');
 }
 
 function setup() {
 	createCanvas(900,600);
-	background(65,60,135);
 	ellipseMode(CENTER);
 	imageMode(CENTER);
 	rectMode(CENTER);
@@ -113,16 +139,13 @@ function setup() {
   //keeps track of pages
   pages=["Picture","Memories","Present","Shelter","Draw"];
   for (var i=1; i<pages.length-1; i++) {
-	  mainButtons.push(new MainButton(75+375*(i-1),550,pages[i]));
+	  mainButtons.push(new Button(75+375*(i-1),550,20,20,255,255,255,'circle',pages[i]));
 	}
-	currPage="Present";
-  
-  //bg music
-  bgm.loop();
-  //pause/play button
-  playB=createButton('play/pause');
-  playB.position(15,15);
-	playB.mousePressed(toggle);
+//   //pause/play button
+//   playB=createButton('play/pause');
+//   playB.position(15,15);
+// 	playB.mousePressed(toggle);
+  playB=new Button(30,30,30,30,255,255,255,'circle','',bgmCtrls[0]);
   
   //present
 	for(var i=0; i<numStars; i++) {
@@ -134,74 +157,51 @@ function setup() {
 	//split so that only half of the pictures fall at a time
 	for (var i=0; i<pics0.length; i++) {
 	  if(i<pics0.length/2) {
-	    mem.push(new Memory(random(200,width-200),random(-500,-100),random(0.07,0.1),random(3,7),random(-PI/5,PI/5),true,false,pics0[i]));   //front
-	    memBack.push(new Memory(random(200,width-200),random(-500,-100),random(0.03,0.07),random(3,7),random(-PI/5,PI/5),false,true,pics0[i]));   //back
+	    mem.push(new Memory(random(200,width-200),random(-500,-100),random(0.07,0.1),random(3,8),random(-PI/5,PI/5),true,false,pics0[i]));   //front
+	    memBack.push(new Memory(random(200,width-200),random(-500,-100),random(0.03,0.07),random(3,8),random(-PI/5,PI/5),false,true,pics0[i]));   //back
 	  } else {
-	    mem.push(new Memory(random(200,width-200),random(-500,-100),random(0.07,0.1),random(3,7),random(-PI/5,PI/5),false,false,pics0[i]));    //front
-	    memBack.push(new Memory(random(200,width-200),random(-500,-100),random(0.03,0.07),random(3,7),random(-PI/5,PI/5),true,true,pics0[i]));    //back
+	    mem.push(new Memory(random(200,width-200),random(-500,-100),random(0.07,0.1),random(3,8),random(-PI/5,PI/5),false,false,pics0[i]));    //front
+	    memBack.push(new Memory(random(200,width-200),random(-500,-100),random(0.03,0.07),random(3,8),random(-PI/5,PI/5),true,true,pics0[i]));    //back
 	  }
 	}
 	
-	picExitB1=new ExitButton(width/2+315,height/2-245,0,7);
-	picExitB2=new ExitButton(width/2+160,height/2-265,0,7);
+	//exit buttons for pictures
+	picExitB1=new Button(width/2+315,height/2-245,20,20,color(255,0),color(255,0),color(255,0),'circle','',exitB[0]);
+	picExitB2=new Button(width/2+160,height/2-265,20,20,color(255,0),color(255,0),color(255,0),'circle','',exitB[0])
 	
 	//shelter
-	for (var i=0; i<pics2.length; i++) {
-	  env.push(new Environment(width/2,height/2-25,720,480,255,color(65,135,170),pics3[i],pics2[i]));
+  for (var i=0; i<pics2.length; i++) {
+	  env.push(new Environment(225*(i%3)+225,135*floor((i+3)/3)+7,180,120,255,color(185,230,240),pics3[i],pics2[i]));
 	}
-	currEnv=0;
-	left=new Tool(50,height/2-25,30,30,255,200,200);
-	right=new Tool(width-50,height/2-25,30,30,255,200,200);
+
 	//draw
-	for(var i=0; i<toolPics.length; i++) {
-	  tools.push(new Tool(70,110+(i*40),25,25,255,color(215,225,230),color(190,200,200),toolPics[i]));
+	finish=new Button(125,height/2-25,70,30,color(255),color(225,215,240),color(145,120,185),'rect','');
+	for (var i=0; i<bCtrlPics.length; i++) {
+	  bCtrls.push(new Button(125,225+(i*100),30,30,color(255),color(185,230,240),color(120,203,230),'rect','',bCtrlPics[i]));
 	}
-	finish=new Tool(150,65,80,20,color(225,215,240),255,color(155,110,200));
-	for (var i=0; i<numBCtrls; i++) {
-	  bCtrls.push(new Tool(240+(25*i),65,21,21,color(210,245,255),color(155,235,255),color(105,200,225),ctrlPics[1][i]));
-	}
-	for(var i=0; i<ctrlPics.length; i++) {
-	  var x=330+(175*i);
-	  for (var j=0; j<ctrlPics[i].length; j++) {
-	    controls[i].push(new Tool(x+(25*j),65,20,20,255,color(215,225,230),color(190,200,200),ctrlPics[i][j]));
-	  }
-	}
-	
-	dd1=createSelect();
-  dd1.position(425,55);
-  dd1.size(60,20);
-  dd1.option('12.50%');
-  dd1.option('25%');
-  dd1.option('50%');
-  dd1.option('75%');
-  dd1.option('100%');
-  dd1.option('200%');
-  dd1.hide();
-    
-  dd2=createSelect();
-  dd2.position(600,55);
-  dd2.size(60,20);
-  dd2.option('+00\u00B0');
-  dd2.option('+45\u00B0');
-  dd2.option('+90\u00B0');
-  dd2.option('+180\u00B0');
-  dd2.option('-135\u00B0');
-  dd2.option('-90\u00B0');
-  dd2.option('-45\u00B0');
-  dd2.hide();
 	
 	drawing=false;
-	drawExitB=new ExitButton(840,60,0,5);
+	drawExitB=new Button(790,85,20,20,color(255,0),color(255,0),color(255,0),'circle','',exitB[1])
 	//stylus=new Stylus(stylusImg)
 	
 	//for pausing/running program
   looping=true;
+  
+  background(0);
+  
+  //start
+  currPage="Intro";
 }
 
 function draw() {
   
+  //INTRO PAGE
+  if(currPage=='Intro') {
+    playVid(vids[1],pages[2])   //intro vid
+    
   //PRESENT PAGE
-  if(currPage==pages[2]) {
+  } else if(currPage==pages[2]) {
+    
   	image(space,width/2,height/2);    //space background
   	for(var i=0; i<stars.length; i++) {
   	  stars[i].shine();
@@ -214,6 +214,7 @@ function draw() {
   } else if(currPage==pages[1]) {
     image(hole,width/2,height/2);     //falling background
     
+    //back of ellipses
     stroke(195,130,205);
     strokeWeight(6);
     noFill();
@@ -270,6 +271,8 @@ function draw() {
         }
       }
     }
+    
+    //front of ellipses
     stroke(240,155,255);
     strokeWeight(7);
     noFill();
@@ -331,52 +334,69 @@ function draw() {
         picExitB2.display();
       }
     }
-    // if(selMem.selected==false) {
-    //   //reset('all',-1);        //reset all components
-    //   selMem.reset();
-    //   currPage=pages[1];      //go back to memory page
-    // }
   
   //SHELTER PAGE
   } else if(currPage==pages[3]) {
-    background(160,240,250);    //blue background
-    if (currEnv>0) {
-      left.ifHover(mouseX,mouseY);
-      left.display();
-      stroke(0);
-      strokeWeight(3);
-      noFill();
-      line(left.x-10,left.y,left.x+10,left.y-10);
-      line(left.x-10,left.y,left.x+10,left.y+10);
-      if(left.selected) {
-        currEnv--;
-        wait(1);
-        left.selected=false;
+    image(space,width/2,height/2);    //space background
+    for(var i=0; i<stars.length; i++) {
+      stars[i].shine();
+    	stars[i].display();
+    }
+    image(panel,width/2,height/2-25);
+    
+    //shows environment choices
+    for(var i=0; i<env.length; i++) {
+      env[i].ifHover(mouseX,mouseY);
+      //if an environment is picked
+      if(env[i].selected) {
+        selEnv=env[i];
+        drawBG();       //set up drawing bg
+        currPage=pages[4];    //go to drawing page
+        reset('e',i);   //'turns off' other environments
+        break;          //exit for loop
+      } else {
+        env[i].display();
       }
     }
-    if (currEnv<env.length-1) {
-      right.ifHover(mouseX,mouseY);
-      right.display();
-      stroke(0);
-      strokeWeight(3);
-      noFill();
-      line(right.x+10,right.y,right.x-10,right.y-10);
-      line(right.x+10,right.y,right.x-10,right.y+10);
-      if(right.selected){
-        currEnv++;
-        wait(1);
-        right.selected=false;
-      }
-    }
-    env[currEnv].ifHover(mouseX,mouseY);
-    if (env[currEnv].selected) {
-      selEnv=env[currEnv];
-      drawBG();             //set up 'drawing program'
-      currPage=pages[4];    //go to draw page
-      reset('e',currEnv);         //'turns off' other environments
-    } else {
-      env[currEnv].display();
-    }
+    
+    //OLD ONE BY ONE CODE
+    // if (currEnv>0) {
+    //   left.ifHover(mouseX,mouseY);
+    //   left.display();
+    //   stroke(0);
+    //   strokeWeight(3);
+    //   noFill();
+    //   line(left.x-10,left.y,left.x+10,left.y-10);
+    //   line(left.x-10,left.y,left.x+10,left.y+10);
+    //   if(left.selected) {
+    //     currEnv--;
+    //     wait(1);
+    //     left.selected=false;
+    //   }
+    // }
+    // if (currEnv<env.length-1) {
+    //   right.ifHover(mouseX,mouseY);
+    //   right.display();
+    //   stroke(0);
+    //   strokeWeight(3);
+    //   noFill();
+    //   line(right.x+10,right.y,right.x-10,right.y-10);
+    //   line(right.x+10,right.y,right.x-10,right.y+10);
+    //   if(right.selected){
+    //     currEnv++;
+    //     wait(1);
+    //     right.selected=false;
+    //   }
+    // }
+    // env[currEnv].ifHover(mouseX,mouseY);
+    // if (env[currEnv].selected) {
+    //   selEnv=env[currEnv];
+    //   drawBG();             //set up 'drawing program'
+    //   currPage=pages[4];    //go to draw page
+    //   reset('e',currEnv);         //'turns off' other environments
+    // } else {
+    //   env[currEnv].display();
+    // }
     
   //DRAW PAGE
   } else if(currPage==pages[4]) {
@@ -387,14 +407,6 @@ function draw() {
       drawExitB.selected=false;
     } else {
       drawExitB.display();
-    }
-    //tools
-    for(var i=0; i<tools.length; i++) {
-      tools[i].ifHover(mouseX,mouseY);
-      tools[i].display();
-      if(tools[i].selected==true) {
-        reset('t',i)          //makes sure only one tool selected at a time
-      }
     }
     //finish button
     finish.ifHover(mouseX,mouseY);
@@ -415,19 +427,7 @@ function draw() {
         bCtrls[i].selected=false;
       }
     }
-    //display drop down menus
-    dd1.show();
-    dd2.show();
-    //controls
-    for(var i=0; i<controls.length; i++) {
-      for(var j=0; j<controls[i].length; j++) {
-        controls[i][j].ifHover(mouseX,mouseY);
-        controls[i][j].display();
-        if(controls[i][j].selected) {
-          reset('c',i,j)       //makes buttons 'one-click only', not 'select'
-        }
-      }
-    }
+
     //displays sketch/image
     selEnv.display();
     if(selEnv.selected==false) {
@@ -444,43 +444,62 @@ function draw() {
   }
   
   //MAIN BUTTONS
+  for (var i=0; i<mainButtons.length; i++) {
+    mainButtons[i].ifHover(mouseX,mouseY);
+    mainButtons[i].mark();
+    //mainButtons[i].display();
+    if(mainButtons[i].selected) {
+      if (i+1==1) {
+        playVid(vids[i],pages[i+1]);
+      } else if (i+1==3) {
+        playVid(vids[i],pages[i+1]);
+      } else if (i+1==2) {
+        currPage=pages[i+1];
+        reset('all',-1);
+      }
+    }
+  }
   stroke(255);
   strokeWeight(2);
   line(75,550,825,550);
   for (var i=0; i<mainButtons.length; i++) {
     mainButtons[i].display();
-    mainButtons[i].ifHover(mouseX,mouseY);
-    mainButtons[i].mark();
-    if(mainButtons[i].selected) {
-      currPage=pages[i+1];      //change page
-      reset('all',-1);          //reset everything when page changes
-    }
   }
+  //play/pause button
+  playB.ifHover(mouseX,mouseY);
+  playB.mark();
+  playB.display();
 }
 
-//draws a 'drawing program'
+//sets up 'drawing' page
 function drawBG() {
-  background(160,240,250);    //blue background
+  image(space,width/2,height/2);    //space background
+  for(var i=0; i<stars.length; i++) {
+    stars[i].shine();
+  	stars[i].display();
+  }
+  image(panel,width/2,height/2-25);
   noStroke();
-  fill(230);
-  rect(width/2,height/2-25,800,450)
-  fill(200)
-  rect(width/2+20,height/2-10,600,400)    //drawing space
-  fill(190,170,235);          //purple
-  rect(470,65,760,30)                     //control menu (top)
-  rect(70,height/2-25,40,450)             //tool menu (left side)
-  fill(255);
-  stroke(50);
-  strokeWeight(0.5);
-  rect(130,115,75,55);
-  fill(0);
-  noStroke(0);
-  textSize(12);
-  text('Try the blue',130,100);
-  text('buttons!',130,110)
-  text('Click finish when',130,125);
-  text('you are done.',130,135);
-  textSize(20);
+  fill(255,100);
+  rect(width/2+15,height/2-22,600,400);
+}
+
+function playVid(vid,dest) {
+  background(0);
+  image(vid,width/2,height/2);
+  vid.play();
+  //console.log(vid.time()+'/'+vid.duration())
+  if (vid.duration()-vid.time() < 0.2) {
+    currPage=dest;
+    if(dest==pages[2]) {
+      bgm.loop()
+      playB.icon=bgmCtrls[1];
+    }
+    vid.time(0);
+    vid.pause();
+    reset('all',-1);          //reset everything when page changes
+  }
+  
 }
 
 //resets certain or all components
@@ -490,18 +509,8 @@ function reset(type,num,num2) {
   if(num2===undefined) {
     num2=null;
   }
-  //just resets specific, since they should be 'off' all the time
-  if(type=='c'){
-    controls[num][num2].selected=false;
-  //reset tools
-  }else if(type=='t') {
-    for(var i=0; i<tools.length; i++) {
-      if(i!=num) {
-        tools[i].selected=false;
-      }
-    }
   //reset memories
-  }else if(type=='m') {
+  if(type=='m') {
     for(var j=0; j<mem.length; j++) {
       if(j!=num) {
         mem[j].selected=false;
@@ -515,11 +524,7 @@ function reset(type,num,num2) {
       }
     }
   //reset all components
-  //controls not included because they're always false
   } else if(type=='all') {
-    for(var i=0; i<tools.length; i++) {
-      tools[i].selected=false;
-    }
     for(var j=0; j<mem.length; j++) {
       mem[j].reset();
     }
@@ -532,32 +537,41 @@ function reset(type,num,num2) {
     for(var m=0; m<mainButtons.length; m++) {
       mainButtons[m].selected=false;
     }
+    playB.selected=false;
     my0=800;
     my1=1000;
     my2=1200;
-    dd1.hide();
-    dd2.hide();
+    // dd1.hide();
+    // dd2.hide();
   }
 }
 
 //pause/play bg music
-function toggle() {
+function toggleBGM() {
   if(bgm.isPlaying()) {
     bgm.pause();
+    playB.icon=bgmCtrls[0];
   } else {
     bgm.play();
+    playB.icon=bgmCtrls[1];
+  }
+}
+
+function mousePressed() {
+  if(playB.hover) {
+    toggleBGM();
+    //playB.selected=false;
   }
 }
 
 //pauses/runs program when 'spacebar' is pressed
+//for coding/debugging purposes
 function keyPressed() {
   if(key==' ') {
     if(looping) {
-      bgm.pause();
       noLoop();
     } else {
       loop();
-      bgm.play();
     }
     looping=!looping;
   }

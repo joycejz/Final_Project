@@ -27,9 +27,9 @@ function Memory(xPos,yPos,s,vel,angle,d,b,p) {
         if(mouseIsPressed) {
           this.selected=true;
           this.hover=false;
-          console.log('select:' +this.selected);
-          console.log('disp:' + this.disp);
-          console.log('hover:' + this.hover);
+          // console.log('select:' +this.selected);
+          // console.log('disp:' + this.disp);
+          // console.log('hover:' + this.hover);
         }
       } else {
         this.hover=false;
@@ -51,7 +51,7 @@ function Memory(xPos,yPos,s,vel,angle,d,b,p) {
   //resets most values randomly
   this.reset=function() {
     this.loc=createVector(random(250,width-250),random(-400,-200));
-    this.v=random(3,7);
+    this.v=random(3,8);
     this.vel=createVector(0,cos(this.a)*this.v);
     if(this.back) {           //'back' images are smaller
       this.s=random(0.03,0.06);
