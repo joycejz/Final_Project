@@ -35,7 +35,7 @@ function Memory(xPos,yPos,s,vel,angle,d,b,p) {
         this.hover=false;
       }
     } else {
-      this.vel.y=cos(this.a)*this.v;
+      this.vel.y=cos(this.a)*this.v;    //original velocity
     }
   }
   
@@ -108,6 +108,7 @@ function Memory(xPos,yPos,s,vel,angle,d,b,p) {
         rect(0,0,this.img.width*this.s+10,this.img.height*this.s+10);
       }
       image(this.img,0,0,this.img.width*this.s,this.img.height*this.s);
+      //puts a 'filter' over image
       if(this.back) {
         noStroke();
         fill(120,155,165,150);

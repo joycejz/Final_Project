@@ -56,9 +56,6 @@ var picExitB2;
 var pics2=[];
 var env=[];
 var numEnv=9;
-// var currEnv;
-// var left;
-// var right;
 //drawing program
 var drawing;
 var selEnv;
@@ -71,10 +68,6 @@ var numSketch=9;
 var numBCtrls=2;
 var drawExitB;
 var finish;
-// var dd1;
-// var dd2;
-//var stylus;
-//var stylusImg;
 
 //for pausing/running the program
 var looping;
@@ -123,8 +116,6 @@ function preload() {
   for(var i=0; i<numBCtrls; i++) {
     bCtrlPics[i]=loadImage('data/brush'+i+'.png');
   }
-	
-	//stylusImg=loadImage('data/pencil.png');
 }
 
 function setup() {
@@ -142,9 +133,6 @@ function setup() {
 	  mainButtons.push(new Button(75+375*(i-1),550,20,20,255,255,255,'circle',pages[i]));
 	}
 //   //pause/play button
-//   playB=createButton('play/pause');
-//   playB.position(15,15);
-// 	playB.mousePressed(toggle);
   playB=new Button(30,30,30,30,255,255,255,'circle','',bgmCtrls[0]);
   
   //present
@@ -182,7 +170,6 @@ function setup() {
 	
 	drawing=false;
 	drawExitB=new Button(790,85,20,20,color(255,0),color(255,0),color(255,0),'circle','',exitB[1])
-	//stylus=new Stylus(stylusImg)
 	
 	//for pausing/running program
   looping=true;
@@ -436,11 +423,6 @@ function draw() {
       reset('all',-1);          //reset all components
       currPage=pages[3];        //go back to 'shelter' page
     }
-    
-    // if((mouseX>90 && mouseX<width-50) && (mouseY>50 && mouseY<height-100)) {
-    //   stylus.update();
-    //   stylus.display()
-    // }
   }
   
   //MAIN BUTTONS
@@ -541,8 +523,6 @@ function reset(type,num,num2) {
     my0=800;
     my1=1000;
     my2=1200;
-    // dd1.hide();
-    // dd2.hide();
   }
 }
 
